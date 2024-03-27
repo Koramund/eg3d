@@ -205,7 +205,7 @@ def generate_images(
             sigmas = np.flip(sigmas, 0)
 
             # Trim the border of the extracted cube
-            pad = int(30 * shape_res / 256)
+            pad = int(60 * shape_res / 256)
             pad_value = -1000
             sigmas[:pad] = pad_value
             sigmas[-pad:] = pad_value
