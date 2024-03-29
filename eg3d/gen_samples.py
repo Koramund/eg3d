@@ -188,9 +188,9 @@ def generate_images(
         PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
         # PIL.Image.fromarray(depth[0].cpu().numpy(), mode='L').save(f'{outdir}/seed{seed:04d}-depth.png')
 
-        depth_img = depth[0].cpu().squeeze().numpy()
+        depth_img = depth[0].cpu()
         print(np.shape(depth_img))
-        depth_imgs = depth_img.permute(1, 2, 0)
+        depth_imgs = depth_img.permute(1, 2, 0).squeeze().numpy()
         print(np.shape(depth_imgs))
 
         for i in depth_imgs.shape[0]:
