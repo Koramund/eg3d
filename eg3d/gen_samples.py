@@ -178,24 +178,26 @@ def generate_images(
             img = data['image']
 
             img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
-            depth_img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            # depth_img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
             imgs.append(img)
             depths.append(depth_img)
 
         img = torch.cat(imgs, dim=2)
-        depth = torch.cat(depths, dim=2)
+        depths = np.array(depths)
+        np.save(f'{outdir}/seed{seed:04d}-depth.npy', depths)
+        # depth = torch.cat(depths, dim=2)
 
         PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
         # PIL.Image.fromarray(depth[0].cpu().numpy(), mode='L').save(f'{outdir}/seed{seed:04d}-depth.png')
 
-        depth_img = depth[0].cpu()
-        print(np.shape(depth_img))
-        depth_imgs = depth_img.permute(1, 2, 0).squeeze().numpy()
-        print(np.shape(depth_imgs))
+        # depth_img = depth[0].cpu()
+        # print(np.shape(depth_img))
+        # depth_imgs = depth_img.permute(1, 2, 0).squeeze().numpy()
+        # print(np.shape(depth_imgs))
 
-        for i in range(depth_imgs.shape[0]):
-            print(np.shape(depth_imgs[i]))
-            PIL.Image.fromarray(depth_imgs[i], mode='L').save(f'{outdir}/seed{seed:04d}-{i}-depth-squeeze.png')
+        # for i in range(depth_imgs.shape[0]):
+        #     print(np.shape(depth_imgs[i]))
+        #     PIL.Image.fromarray(depth_imgs[i], mode='L').save(f'{outdir}/seed{seed:04d}-{i}-depth-squeeze.png')
 
 
         if shapes:
