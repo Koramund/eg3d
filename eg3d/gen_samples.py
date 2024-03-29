@@ -187,10 +187,15 @@ def generate_images(
 
         PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
         # PIL.Image.fromarray(depth[0].cpu().numpy(), mode='L').save(f'{outdir}/seed{seed:04d}-depth.png')
+
         depth_img = depth[0].cpu().squeeze().numpy()
-        print("DEBUG HERE _____________________________________")
         print(np.shape(depth_img))
-        PIL.Image.fromarray(depth[0].cpu().numpy().squeeze(), mode='L').save(f'{outdir}/seed{seed:04d}-depth-squeeze.png')
+        depth_imgs = depth_img.permute(1, 2, 0)
+        print(np.shape(depth_imgs))
+
+        for i in depth_imgs.shape[0]:
+            print(np.shape(depth_imgs[i]))
+            PIL.Image.fromarray(depth_imgs[i], mode='L').save(f'{outdir}/seed{seed:04d}-{i}-depth-squeeze.png')
 
 
         if shapes:
