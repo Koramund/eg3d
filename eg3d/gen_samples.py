@@ -183,7 +183,7 @@ def generate_images(
             depths.append(depth_img)
 
         img = torch.cat(imgs, dim=2)
-        depths = np.array(depths)
+        depths = np.array([depth_img.cpu() for depth_img in depths])
         np.save(f'{outdir}/seed{seed:04d}-depth.npy', depths)
         # depth = torch.cat(depths, dim=2)
 
