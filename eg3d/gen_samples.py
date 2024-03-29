@@ -162,6 +162,7 @@ def generate_images(
         z = torch.from_numpy(np.random.RandomState(seed).randn(1, G.z_dim)).to(device)
 
         imgs = []
+        depths = []
         angle_p = -0.2
         for angle_y, angle_p in [(.4, angle_p), (0, angle_p), (-.4, angle_p)]:
             cam_pivot = torch.tensor(G.rendering_kwargs.get('avg_camera_pivot', [0, 0, 0]), device=device)
@@ -172,14 +173,22 @@ def generate_images(
             conditioning_params = torch.cat([conditioning_cam2world_pose.reshape(-1, 16), intrinsics.reshape(-1, 9)], 1)
 
             ws = G.mapping(z, conditioning_params, truncation_psi=truncation_psi, truncation_cutoff=truncation_cutoff)
-            img = G.synthesis(ws, camera_params)['image']
+            data = G.synthesis(ws, camera_params)
+            depth_img = data['image_depth']
+            img = data['image']
 
             img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+            depth_img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
             imgs.append(img)
+            depths.append(depth_img)
 
         img = torch.cat(imgs, dim=2)
+        depth = torch.cat(depths, dim=2)
 
         PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(f'{outdir}/seed{seed:04d}.png')
+        PIL.Image.fromarray(depth[0].cpu().numpy(), mode='L').save(f'{outdir}/seed{seed:04d}-depth.png')
+        PIL.Image.fromarray(depth[0].cpu().squeeze().numpy(), mode='L').save(f'{outdir}/seed{seed:04d}-depth-squeeze.png')
+
 
         if shapes:
             # extract a shape.mrc with marching cubes. You can view the .mrc file using ChimeraX from UCSF.
