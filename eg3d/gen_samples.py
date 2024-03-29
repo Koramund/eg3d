@@ -193,7 +193,7 @@ def generate_images(
         depth_imgs = depth_img.permute(1, 2, 0).squeeze().numpy()
         print(np.shape(depth_imgs))
 
-        for i in depth_imgs.shape[0]:
+        for i in range(depth_imgs.shape[0]):
             print(np.shape(depth_imgs[i]))
             PIL.Image.fromarray(depth_imgs[i], mode='L').save(f'{outdir}/seed{seed:04d}-{i}-depth-squeeze.png')
 
