@@ -77,12 +77,17 @@ def make_transform(translate: Tuple[float,float], angle: float):
 #----------------------------------------------------------------------------
 
 def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
+    eyes = True
+    if eyes:
+        voxel_origin=[0, 0.1, 0]
+        cube_length=cube_length/2
     # NOTE: the voxel_origin is actually the (bottom, left, down) corner, not the middle
-    voxel_origin = np.array(voxel_origin) - cube_length/2
-    voxel_size = cube_length / (N - 1)
+    voxel_origin = np.array(voxel_origin) - cube_length/2  # move origin to bld to center image
+    voxel_size = cube_length / (N - 1)  # define distance between voxels.
 
-    overall_index = torch.arange(0, N ** 3, 1, out=torch.LongTensor())
-    samples = torch.zeros(N ** 3, 3)
+    overall_index = torch.arange(0, N ** 3, 1, out=torch.LongTensor())  # create index array
+    samples = torch.zeros(N ** 3, 3)  # create 3d , each array will contain the positions of the sample.
+    # second dimension represents the x coordinate then y and so on.
 
     # transform first 3 columns
     # to be the x, y, z index
@@ -92,6 +97,9 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
 
     # transform first 3 columns
     # to be the x, y, z coordinate
+    # you can play with these values to alter the samples taken, scaling voxel origin for example would lead to a smaller mapped domain.
+    # change these to only get the eyes.
+    # scaling these independently can be risky if the visualizer does not take into account the shifting, chimerax will not by default.
     samples[:, 0] = (samples[:, 0] * voxel_size) + voxel_origin[2]
     samples[:, 1] = (samples[:, 1] * voxel_size) + voxel_origin[1]
     samples[:, 2] = (samples[:, 2] * voxel_size) + voxel_origin[0]
@@ -221,6 +229,7 @@ def generate_images(
                         pbar.update(max_batch)
 
             sigmas = sigmas.reshape((shape_res, shape_res, shape_res)).cpu().numpy()
+            # watch this fip, could be that slicing in sample generation is misunderstood.
             sigmas = np.flip(sigmas, 0)
 
             # Trim the border of the extracted cube
