@@ -233,14 +233,15 @@ def generate_images(
             sigmas = np.flip(sigmas, 0)
 
             # Trim the border of the extracted cube
-            pad = int(10 * shape_res / 256)
+            low_pad = int(10 * shape_res / 256)
+            high_pad = int(60 * shape_res / 256)
             pad_value = -1000
-            sigmas[:pad] = pad_value
-            sigmas[-pad:] = pad_value
-            sigmas[:, :pad] = pad_value
-            sigmas[:, -pad:] = pad_value
-            sigmas[:, :, :pad] = pad_value
-            sigmas[:, :, -pad:] = pad_value
+            sigmas[:low_pad] = pad_value
+            sigmas[-low_pad:] = pad_value
+            sigmas[:, :high_pad] = pad_value
+            sigmas[:, -high_pad:] = pad_value
+            sigmas[:, :, :low_pad] = pad_value
+            sigmas[:, :, -low_pad:] = pad_value
 
             if shape_format == '.ply':
                 from shape_utils import convert_sdf_samples_to_ply
