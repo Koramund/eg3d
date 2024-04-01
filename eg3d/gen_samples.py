@@ -79,7 +79,7 @@ def make_transform(translate: Tuple[float,float], angle: float):
 def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
     eyes = True
     if eyes:
-        voxel_origin=[0, 0.1, 0.25]
+        voxel_origin=[0.25, 0.1, 0]
         # cube_length=cube_length/2
     # NOTE: the voxel_origin is actually the (bottom, left, down) corner, not the middle
     voxel_origin = np.array(voxel_origin) - cube_length/2  # move origin to bld to center image
@@ -233,7 +233,7 @@ def generate_images(
             sigmas = np.flip(sigmas, 0)
 
             # Trim the border of the extracted cube
-            pad = int(60 * shape_res / 256)
+            pad = int(10 * shape_res / 256)
             pad_value = -1000
             sigmas[:pad] = pad_value
             sigmas[-pad:] = pad_value
