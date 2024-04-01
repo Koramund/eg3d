@@ -234,8 +234,8 @@ def generate_images(
 
             # Trim the border of the extracted cube
             low_pad = int(10 * shape_res / 256)
-            chin_pad = int(60 * shape_res / 256)
-            head_pad = int(70 * shape_res / 256)
+            chin_pad = int(65 * shape_res / 256)
+            head_pad = int(90 * shape_res / 256)
             pad_value = -1000
             sigmas[:low_pad] = pad_value
             sigmas[-low_pad:] = pad_value
