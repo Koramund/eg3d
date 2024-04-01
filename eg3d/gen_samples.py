@@ -80,7 +80,7 @@ def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
     eyes = True
     if eyes:
         voxel_origin=[0.25, 0.1, 0]
-        # cube_length=cube_length/2
+        cube_length=cube_length/1.5
     # NOTE: the voxel_origin is actually the (bottom, left, down) corner, not the middle
     voxel_origin = np.array(voxel_origin) - cube_length/2  # move origin to bld to center image
     voxel_size = cube_length / (N - 1)  # define distance between voxels.
