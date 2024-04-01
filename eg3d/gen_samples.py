@@ -79,7 +79,7 @@ def make_transform(translate: Tuple[float,float], angle: float):
 def create_samples(N=256, voxel_origin=[0, 0, 0], cube_length=2.0):
     eyes = True
     if eyes:
-        voxel_origin=[0, 0.1, 0]
+        voxel_origin=[0, 0.1, 0.5]
         cube_length=cube_length/2
     # NOTE: the voxel_origin is actually the (bottom, left, down) corner, not the middle
     voxel_origin = np.array(voxel_origin) - cube_length/2  # move origin to bld to center image
